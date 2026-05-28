@@ -6,7 +6,7 @@ A sanitized public portfolio demo for an industrial IoT / SCADA-like data flow:
 Synthetic Machine / STM32 UART-CAN Bridge → Edge Gateway Demo → FastAPI Backend → Real-Time Dashboard
 ```
 
-This repository is designed to show technical capability without exposing any production implementation, proprietary architecture, business logic, real machine mappings, customer data, secrets, tokens, or private MACİT Cloud code.
+This repository is designed to show technical capability without exposing any production implementation, proprietary architecture, business logic, real machine mappings, customer data, secrets, tokens, or private MCT Cloud code.
 
 ## What this demo shows
 
@@ -24,7 +24,7 @@ This repository is designed to show technical capability without exposing any pr
 - Real CAN frame mappings
 - Real machine/customer data
 - API keys, tokens, private IP addresses or environment secrets
-- Full MACİT Cloud architecture
+- Full MCT Cloud architecture
 - Investment/pitch materials
 
 ## Project structure
