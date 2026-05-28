@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Industrial IoT Edge Demo</title>
+    <link rel="stylesheet" href="/dashboard/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Public portfolio demo</p>
+          <h1>Industrial IoT Edge Dashboard</h1>
+          <p class="subtitle">
+            Synthetic machine data → sanitized edge logic → FastAPI → real-time operator dashboard.
+          </p>
+        </div>
+        <div class="system-card">
+          <span class="pulse"></span>
+          <div>
+            <strong id="connection-state">Connecting</strong>
+            <small>API status</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="notice">
+        <strong>Demo safety note:</strong>
+        This repository does not include production code, proprietary algorithms,
+        real machine mappings, customer data, tokens, or full business architecture.
+      </section>
+
+      <section class="grid" id="machine-grid">
+        <article class="empty-state">Waiting for machine samples...</article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Recent alarms</h2>
+          <span id="alarm-count">0</span>
+        </div>
+        <div id="alarm-list" class="alarm-list">
+          <p class="muted">No alarms yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="/dashboard/app.js"></script>
+  </body>
+</html>
