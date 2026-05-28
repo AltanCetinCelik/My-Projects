@@ -153,16 +153,3 @@ curl -X POST http://127.0.0.1:8000/api/machines/data \
   }'
 ```
 
-## Portfolio note
-
-Suggested GitHub description:
-
-> Public-safe demo of an industrial IoT edge platform using FastAPI, synthetic machine data, sanitized UART/CAN bridge parsing and a real-time dashboard.
-
-Suggested CV line:
-
-> Built a public-safe industrial IoT edge demo with FastAPI, synthetic machine telemetry, UART/CAN bridge parsing, health scoring and a browser dashboard. Production implementation remains private due to proprietary architecture.
-
-## License
-
-Use this demo however you want for your portfolio. Before publishing, review every file once more and make sure no private code, customer data, credentials, real IPs or proprietary mappings were copied into the repository.
