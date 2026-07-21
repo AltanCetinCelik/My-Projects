@@ -58,3 +58,8 @@ vibration / current telemetry. **Demonstrated live on physical hardware.**
 ## 🛠️ Skills
 Python · TypeScript · SQL · C · FastAPI · Pydantic · asyncio · AI agents · RAG · prompt engineering ·
 guardrails · Groq · Ollama · MCP · Docker · Linux · Raspberry Pi · React/Next.js · CAN bus · SCADA
+
+---
+
+## 📄 License
+Released under the [MIT License](LICENSE).
