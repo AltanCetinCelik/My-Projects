@@ -1,155 +1,97 @@
-# Industrial IoT Edge Demo
+# ⚙️ Industrial IoT Edge Demo
 
-A sanitized public portfolio demo for an industrial IoT / SCADA-like data flow:
+> Synthetic machine data → sanitized edge parser → **FastAPI** backend → **real-time operator dashboard**.
+> The public, runnable distillation of my MCT predictive-maintenance thesis.
 
-```text
-Synthetic Machine / STM32 UART-CAN Bridge → Edge Gateway Demo → FastAPI Backend → Real-Time Dashboard
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
+![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC)
+![License](https://img.shields.io/badge/license-MIT-black)
+
+![Industrial IoT Edge Dashboard](screenshots/dashboard.png)
+
+*Live operator dashboard: per-machine RPM / temperature / vibration / current, health scoring, and a color-coded alarm feed — a healthy conveyor, a warning pump, and a critical motor.*
+
+---
+
+## What it demonstrates
+
+- **FastAPI** ingestion API + a dashboard served from the same app
+- A **sanitized edge gateway** that parses STM32-style `UART/CAN` bridge frames (e.g. `<CAN,201,8,5A032A03...>`)
+- A **rule-based health/anomaly engine** (temperature, vibration, current, RPM thresholds) producing a 0–100 health score and alarms
+- A **real-time dashboard** with machine cards, gradient health bars, and a live alarm log
+- A **synthetic data simulator** and **pytest** coverage for the parser
+
+This mirrors the edge + dashboard layer I owned on **MCT**, a CAN-bus predictive-maintenance
+platform built and demonstrated on real hardware as my EEE thesis. The real system's CAN
+mappings, ML scoring, and cloud architecture are proprietary and intentionally excluded here.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    SIM["Synthetic machine /<br/>STM32 UART-CAN frames"] -->|serial / HTTP| EDGE["Edge Gateway<br/>UART-CAN parser"]
+    EDGE -->|POST /api/machines/data| API["FastAPI Backend"]
+    API --> RULES["Rule engine<br/>health score + alarms"]
+    API --> STORE[("In-memory<br/>latest state + history")]
+    API -->|GET /api/machines/latest<br/>GET /api/alarms| DASH["Browser Dashboard<br/>cards · gauges · alarms"]
 ```
 
-This repository is designed to show technical capability without exposing any production implementation, proprietary architecture, business logic, real machine mappings, customer data, secrets, tokens, or private MCT Cloud code.
+---
 
-## What this demo shows
+## Quickstart
 
-- FastAPI backend for machine data ingestion
-- Real-time dashboard served from the backend
-- Synthetic machine data simulator
-- Sanitized edge gateway that can parse STM32-style UART/CAN bridge lines
-- Simple public-safe health scoring and alarm logic
-- Clean project structure suitable for a GitHub portfolio
+```bash
+cd industrial-iot-edge-demo
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 
-## What this demo intentionally does **not** include
+uvicorn backend.main:app --reload            # dashboard → http://127.0.0.1:8000
+python simulator/machine_simulator.py        # in a second terminal, stream data
+```
 
-- Production source code
-- Proprietary anomaly detection or ML logic
-- Real CAN frame mappings
-- Real machine/customer data
-- API keys, tokens, private IP addresses or environment secrets
-- Full MCT Cloud architecture
-- Investment/pitch materials
+API docs are auto-generated at `http://127.0.0.1:8000/docs`.
 
-## Project structure
+**Optional — parse real UART/CAN hardware:**
+```bash
+python edge/edge_gateway_demo.py --serial-port /dev/ttyUSB0
+```
+
+Run the tests:
+```bash
+python -m pytest -q
+```
+
+---
+
+## Project layout
 
 ```text
 industrial-iot-edge-demo/
 ├── backend/
-│   ├── main.py              # FastAPI API + dashboard serving
-│   ├── models.py            # Pydantic data models
-│   ├── anomaly.py           # Public-safe demo rule engine
-│   └── storage.py           # In-memory demo storage
+│   ├── main.py        # FastAPI app: ingestion API + dashboard
+│   ├── models.py      # Pydantic models (sample, evaluated state, alarm)
+│   ├── anomaly.py     # rule-based health/alarm engine
+│   └── storage.py     # in-memory latest-state + history
 ├── edge/
-│   └── edge_gateway_demo.py # Sanitized UART/CAN bridge parser + poster
+│   └── edge_gateway_demo.py   # UART/CAN bridge parser + poster
 ├── simulator/
-│   └── machine_simulator.py # Synthetic machine data generator
-├── dashboard/
-│   ├── index.html
-│   ├── style.css
-│   └── app.js
-├── docs/
-│   └── architecture.md
-├── screenshots/
-│   └── dashboard-placeholder.svg
-├── tests/
-│   └── test_uart_parser.py
-├── .env.example
-├── .gitignore
-├── requirements.txt
-└── README.md
+│   └── machine_simulator.py   # synthetic RPM/temp/vibration/current
+├── dashboard/         # HTML + CSS + JS operator UI
+├── tests/             # pytest (parser)
+└── docs/architecture.md
 ```
 
-## Quick start
+---
 
-### 1. Create a virtual environment
+## Deliberately excluded (kept portfolio-safe)
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
+Real CAN frame mappings · proprietary ML scoring · customer/factory data · secrets & tokens ·
+the full MCT cloud architecture. A production build would add auth, persistent storage, audit
+logs, signed device identity, and fail-safe/watchdog behavior.
 
-On Windows:
+---
 
-```bash
-.venv\Scripts\activate
-```
-
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Start the backend
-
-```bash
-uvicorn backend.main:app --reload
-```
-
-Open the dashboard:
-
-```text
-http://127.0.0.1:8000
-```
-
-API docs:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-### 4. Send demo machine data
-
-In a second terminal:
-
-```bash
-python simulator/machine_simulator.py
-```
-
-The dashboard will start showing synthetic machine values and alarms.
-
-## Optional: Run the UART/CAN bridge style demo
-
-This mode resembles a sanitized STM32 bridge output such as:
-
-```text
-<CAN,201,8,5A032A0302000000>
-<HB,51000,1,14,8>
-```
-
-Run without real hardware:
-
-```bash
-python edge/edge_gateway_demo.py
-```
-
-Run with a USB-TTL / UART device:
-
-```bash
-python edge/edge_gateway_demo.py --serial-port /dev/ttyUSB0 --baudrate 115200
-```
-
-The parser uses a fake public mapping:
-
-```text
-bytes 0-1: RPM, little-endian
-byte 2: temperature offset from 20°C
-byte 3: vibration × 10
-byte 4: current × 10
-```
-
-This mapping is intentionally generic and not a production CAN protocol.
-
-## Example API request
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/machines/data \
-  -H "Content-Type: application/json" \
-  -d '{
-    "machine_id": "MOTOR_01",
-    "rpm": 1450,
-    "temperature_c": 62.5,
-    "vibration_mm_s": 0.31,
-    "current_a": 2.8,
-    "operator_command": "SET_SPEED_75",
-    "source": "curl-demo"
-  }'
-```
-
+Built by **Altan Çetin Çelik** — [GitHub](https://github.com/AltanCetinCelik) · [LinkedIn](https://www.linkedin.com/in/altan-celik-004bb1248/) · altancelik35@gmail.com · [MIT License](../LICENSE)
